@@ -3,6 +3,8 @@
         "authtoken",
         "bannerhome",
         "Claases",
+        "collectionuser",
+        "collectionusers",
         "corsheaders",
         "schooldb",
         "schoolmanagement",

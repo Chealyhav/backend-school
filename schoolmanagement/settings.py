@@ -96,13 +96,9 @@ WSGI_APPLICATION = 'schoolmanagement.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'web_db-school',
+        'NAME': 'school_db',
         'USER': 'root',
         'PASSWORD':'',
         'HOST': 'localhost',
@@ -110,14 +106,12 @@ DATABASES = {
           'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET collation_connection = utf8mb4_unicode_ci"
-            #  'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-            # 'charset': 'utf8mb4',
-          
+              
         },
     }
 }
 
-
+AUTH_USER_MODEL = 'collection.User'
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
