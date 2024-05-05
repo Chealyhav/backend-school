@@ -10,7 +10,7 @@ from django.db import models
 class Classes(models.Model):
     name = models.CharField(max_length=200, null=True)
     classCode = models.CharField(max_length=200, null=True)
-    background = models.ImageField(upload_to='content', null=True)
+    background = models.ImageField(upload_to='content',blank=True)
     des = models.CharField(max_length=500, null=True)
     price = models.CharField(max_length=500, null=True)
     duration = models.CharField(max_length=500, null=True)

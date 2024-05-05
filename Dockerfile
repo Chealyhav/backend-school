@@ -1,20 +1,17 @@
-FROM python:3.12.2-slim-bullseye
+FROM python:3.11.4-slim-bullseye
+WORKDIR /app
 
-WORKDIR /usr/src/djangobnb_backend
-
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN apt-get update && apt-get install -y netcat
+# install system dependencies
+RUN apt-get update
 
+# install dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
+COPY ./requirements.txt /app/
 RUN pip install -r requirements.txt
 
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/djangobnb_backend/entrypoint.sh
-RUN chmod +x /usr/src/djangobnb_backend/entrypoint.sh
+COPY . /app
 
-COPY . .
-
-ENTRYPOINT [ "/usr/src/djangobnb_backend/entrypoint.sh" ]
+ENTRYPOINT [ "gunicorn", "core.wsgi", "-b", "0.0.0.0:8000"]

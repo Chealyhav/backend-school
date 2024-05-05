@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from pathlib import Path
 import os
+import dj_database_url
 CORS_ORIGIN_ALLOW_ALL = True
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -97,27 +98,25 @@ WSGI_APPLICATION = 'schoolmanagement.wsgi.application'
 
 DATABASES = {
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'dbschool',
+    #     'USER': 'root',
+    #     'PASSWORD':'',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306', 
+    #       'OPTIONS': {
+    #         'charset': 'utf8mb4',
+    #         'init_command': "SET collation_connection = utf8mb4_unicode_ci"
+              
+    #     },
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'web_db-school',
-        'USER': 'root',
-        'PASSWORD':'',
-        'HOST': 'localhost',
-        'PORT': '3306', 
-          'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET collation_connection = utf8mb4_unicode_ci"
-            #  'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-            # 'charset': 'utf8mb4',
-          
-        },
-    }
 }
 
+# database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse("postgres://dbschoolusername:spuZqsCb69cZOijXO4TlBm0LjziuER3U@dpg-cors0na1hbls73fahpug-a.oregon-postgres.render.com/dbschoolname")
 
+
+AUTH_USER_MODEL = 'collection.User'
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
