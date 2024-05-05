@@ -14,7 +14,7 @@ from django.contrib.auth import authenticate
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=["email","first_name", "last_name","password" ,"username", "role","token"]
+        fields=["email","first_name", "last_name","password" ,"username", "role"]
 
     def create(self, validated_data):
         user = User(
@@ -22,8 +22,7 @@ class UserSerializers(serializers.ModelSerializer):
             username=validated_data['username'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            role=validated_data['role'],
-            token=validated_data['token']
+            role=validated_data['role']
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -34,12 +33,13 @@ class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=128, write_only=True)
     role = serializers.CharField(read_only=True)
-
+    first_name = serializers.CharField(read_only=True)
+    last_name = serializers.CharField(read_only=True)
+    username = serializers.CharField(read_only=True)
     def validate(self, data):
         email = data['email']
         password = data['password']
-        token=data['token']
-        user = authenticate(email=email, password=password,token=token)
+        user = authenticate(email=email, password=password)
 
         if user is None:
             raise serializers.ValidationError("Invalid login credentials")
@@ -50,21 +50,14 @@ class UserLoginSerializer(serializers.Serializer):
                 'email': user.email,
                 "password": user.password,
                 'role': user.role,
-                'token': user.token,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'username': user.username,
             }
 
             return validation
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid login credentials")
-# class UserSerializer(serializers.ModelSerializer): 
-#     class Meta: 
-#         model = User 
-#         fields = ['username', 'password']
-#     def create(self, validated_data): 
-#         user = User.objects.create(username=validated_data['username'])
-#         user.set_password(validated_data['password'])
-#         user.save()
-#         return user
     
 class BannerHomerSerializer(serializers.ModelSerializer): 
     class Meta: 
@@ -76,15 +69,8 @@ class LogoSerializer(serializers.ModelSerializer):
         model = Logo 
         fields = '__all__'    
 
-# class StrategySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Strategy
-#         fields = '__all__'
-        
-        
-class AboutSerializer(serializers.ModelSerializer):
-    # strategy = StrategySerializer(many=True)
 
+class AboutSerializer(serializers.ModelSerializer):
     class Meta:
         model = About
         fields = '__all__'

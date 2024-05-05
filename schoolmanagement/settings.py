@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from pathlib import Path
 import os
+import dj_database_url
 CORS_ORIGIN_ALLOW_ALL = True
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -96,20 +97,24 @@ WSGI_APPLICATION = 'schoolmanagement.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'school_db',
-        'USER': 'root',
-        'PASSWORD':'',
-        'HOST': 'localhost',
-        'PORT': '3306', 
-          'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET collation_connection = utf8mb4_unicode_ci"
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'dbschool',
+    #     'USER': 'root',
+    #     'PASSWORD':'',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306', 
+    #       'OPTIONS': {
+    #         'charset': 'utf8mb4',
+    #         'init_command': "SET collation_connection = utf8mb4_unicode_ci"
               
-        },
-    }
+    #     },
+    # }
 }
+
+# database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse("postgres://dbschoolusername:spuZqsCb69cZOijXO4TlBm0LjziuER3U@dpg-cors0na1hbls73fahpug-a.oregon-postgres.render.com/dbschoolname")
+
 
 AUTH_USER_MODEL = 'collection.User'
 # Password validation

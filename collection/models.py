@@ -53,7 +53,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
-    token = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -86,7 +85,6 @@ class BannerHome(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.title
-
 
 class Logo(models.Model):
     background = models.CharField(max_length=500)

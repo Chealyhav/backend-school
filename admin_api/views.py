@@ -1,41 +1,12 @@
 
-from django.contrib.auth.models import User
+
 from .models import *
 from rest_framework.response import Response
 from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-# from .models import Banner
-# from .serializers import BannerSerializer
 import os
-class UserRegistration(APIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
-    serializer_class = UserSerializer
-
-    def get(self, request):
-        # This is just an example. You can customize the GET method as needed.
-        users = User.objects.all()
-        serializer = self.serializer_class(users, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            user = User.objects.get(username=serializer.data['username'])
-            token = Token.objects.create(user=user)
-            return Response({
-                'token': token.key,
-                'user_id': user.pk,
-                'email': user.email
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class ClassesAPIView(APIView):
@@ -55,28 +26,6 @@ class ClassesAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def patch(self, request, pk):
-    #     try:
-    #         classes = Classes.objects.get(pk=pk)
-    #     except Classes.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
-
-    #     serializer = ClaasesSerializer(classes, data=request.data, partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def delete(self, request, pk):
-    #     try:
-    #         classes = Classes.objects.get(pk=pk)
-    #     except Classes.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
-
-    #     classes.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-    
     
     def patch(self, request, pk):
         try:
@@ -101,6 +50,131 @@ class ClassesAPIView(APIView):
                 return Response({'error': 'Image file not found'}, status=status.HTTP_404_NOT_FOUND)
         except Classes.DoesNotExist:
             return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class TeacherViewSet(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            teacher = Teacher.objects.get(pk=pk)
+            serializer = TeacherSerializer(teacher)
+            return Response(serializer.data)
+        else:
+            teachers = Teacher.objects.all()
+            serializer = TeacherSerializer(teachers, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TeacherSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def patch(self, request, pk):
+        try:
+            image = Teacher.objects.get(pk=pk)
+            serializer = TeacherSerializer(image, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Teacher.DoesNotExist:
+            return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            image = Teacher.objects.get(pk=pk)
+            image_path = os.path.join('media', str(image.profile))
+            if os.path.exists(image_path):
+                os.remove(image_path)
+                image.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'error': 'Image file not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Teacher.DoesNotExist:
+            return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class GroupAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                group = Group.objects.get(pk=pk)
+                serializer = GroupSerializer(group)
+                return Response(serializer.data)
+            except Group.DoesNotExist:
+                return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            groups = Group.objects.all()
+            serializer = GroupSerializer(groups, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = GroupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk):
+        try:
+            group = Group.objects.get(pk=pk)
+            serializer = GroupSerializer(group, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Group.DoesNotExist:
+            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            group = Group.objects.get(pk=pk)
+            group.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Group.DoesNotExist:
+            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
+class StudentAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                student = Student.objects.get(pk=pk)
+                serializer = StudentSerializer(student)
+                return Response(serializer.data)
+            except Student.DoesNotExist:
+                return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            students = Student.objects.all()
+            serializer = StudentSerializer(students, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk):
+        try:
+            image = Student.objects.get(pk=pk)
+            serializer = StudentSerializer(image, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Student.DoesNotExist:
+            return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
+    def delete(self, request, pk):
+        try:
+            image = Student.objects.get(pk=pk)
+            image_path = os.path.join('media', str(image.background))
+            if os.path.exists(image_path):
+                os.remove(image_path)
+                image.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'error': 'Image file not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Student.DoesNotExist:
+            return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class BannerViewSet(APIView):
     def get(self, request, pk=None):
