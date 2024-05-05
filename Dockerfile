@@ -1,14 +1,22 @@
+# Use an official Python runtime as a parent image
+FROM python:3.8
 
-# syntax=docker/dockerfile:1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-FROM python:3.10.6-slim-buster
-
+# Set the working directory in the container
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+# Copy the project code into the container
+COPY . /app/
 
-RUN pip3 install -r requirements.txt
+# Install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-COPY . .
+# Expose the port that the app runs on
+EXPOSE 8000
 
-CMD [ "python3", "manage.py", "runserver", "0.0.0.0:8000", "--noreload"]
+# Run the Django app
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
