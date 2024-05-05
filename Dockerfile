@@ -1,17 +1,14 @@
-FROM python:3.11.4-slim-bullseye
+
+# syntax=docker/dockerfile:1
+
+FROM python:3.10.6-slim-buster
+
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+COPY requirements.txt requirements.txt
 
-# install system dependencies
-RUN apt-get update
+RUN pip3 install -r requirements.txt
 
-# install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /app/
-RUN pip install -r requirements.txt
+COPY . .
 
-COPY . /app
-
-ENTRYPOINT [ "gunicorn", "core.wsgi", "-b", "0.0.0.0:8000"]
+CMD [ "python3", "manage.py", "runserver", "0.0.0.0:8000", "--noreload"]
