@@ -9,6 +9,7 @@
         "schooldb",
         "schoolmanagement",
         "schoolmodel",
-        "simplejwt"
+        "simplejwt",
+        "startproject"
     ]
 }
