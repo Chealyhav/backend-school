@@ -1,22 +1,9 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12.1
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Set the working directory in the container
+ENV PYTHONUNBUFFERED 1 
 WORKDIR /app
-
-# Copy the project code into the container
-COPY . /app/
-
-# Install dependencies
-RUN pip install --upgrade pip
+COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
-
-# Expose the port that the app runs on
+COPY . /app
 EXPOSE 8000
-
-# Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD python manage.py runserver 0.0.0.0:8000
