@@ -7,10 +7,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import os
-from .serializers import ClaasesSerializer
-from .serializers import TeacherSerializer
-from .serializers import GroupSerializer
-from .serializers import StudentSerializer
+# from .serializers import ClaasesSerializer
+# from .serializers import TeacherSerializer
+# from .serializers import GroupSerializer
+# from .serializers import StudentSerializer
+# from .serializers import ParentSerializer
+
 class ClassesAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
@@ -177,4 +179,360 @@ class StudentAPIView(APIView):
         except Student.DoesNotExist:
             return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
 
+class SubjectAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                subject = Subject.objects.get(pk=pk)
+                serializer = SubjectSerializer(subject)
+                return Response(serializer.data)
+            except Subject.DoesNotExist:
+                return Response({'error': 'Subject record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            subjects = Subject.objects.all()
+            serializer = SubjectSerializer(subjects, many=True)
+            return Response(serializer.data)
 
+    def post(self, request):
+        serializer = SubjectSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            subject = Subject.objects.get(pk=pk)
+            serializer = SubjectSerializer(subject, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Subject.DoesNotExist:
+            return Response({'error': 'Subject record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            subject = Subject.objects.get(pk=pk)
+            subject.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Subject.DoesNotExist:
+            return Response({'error': 'Subject record not found'}, status=status.HTTP_404_NOT_FOUND)
+class ParentAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                parent = Parent.objects.get(pk=pk)
+                serializer = ParentSerializer(parent)
+                return Response(serializer.data)
+            except Parent.DoesNotExist:
+                return Response({'error': 'Parent not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            parents = Parent.objects.all()
+            serializer = ParentSerializer(parents, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ParentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            parent = Parent.objects.get(pk=pk)
+            serializer = ParentSerializer(parent, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Parent.DoesNotExist:
+            return Response({'error': 'Parent not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            parent = Parent.objects.get(pk=pk)
+            parent.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Parent.DoesNotExist:
+            return Response({'error': 'Parent not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class AttendanceAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                attendance = Attendance.objects.get(pk=pk)
+                serializer = AttendanceSerializer(attendance)
+                return Response(serializer.data)
+            except Attendance.DoesNotExist:
+                return Response({'error': 'Attendance record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            attendance = Attendance.objects.all()
+            serializer = AttendanceSerializer(attendance, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AttendanceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            attendance = Attendance.objects.get(pk=pk)
+            serializer = AttendanceSerializer(attendance, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Attendance.DoesNotExist:
+            return Response({'error': 'Attendance record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            attendance = Attendance.objects.get(pk=pk)
+            attendance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Attendance.DoesNotExist:
+            return Response({'error': 'Attendance record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ExamTypeAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                exam_type = ExamType.objects.get(pk=pk)
+                serializer = ExamTypeSerializer(exam_type)
+                return Response(serializer.data)
+            except ExamType.DoesNotExist:
+                return Response({'error': 'ExamType record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            exam_types = ExamType.objects.all()
+            serializer = ExamTypeSerializer(exam_types, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ExamTypeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            exam_type = ExamType.objects.get(pk=pk)
+            serializer = ExamTypeSerializer(exam_type, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except ExamType.DoesNotExist:
+            return Response({'error': 'ExamType record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            exam_type = ExamType.objects.get(pk=pk)
+            exam_type.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ExamType.DoesNotExist:
+            return Response({'error': 'ExamType record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ExamAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                exam = Exam.objects.get(pk=pk)
+                serializer = ExamSerializer(exam)
+                return Response(serializer.data)
+            except Exam.DoesNotExist:
+                return Response({'error': 'Exam record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            exams = Exam.objects.all()
+            serializer = ExamSerializer(exams, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ExamSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            exam = Exam.objects.get(pk=pk)
+            serializer = ExamSerializer(exam, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exam.DoesNotExist:
+            return Response({'error': 'Exam record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            exam = Exam.objects.get(pk=pk)
+            exam.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exam.DoesNotExist:
+            return Response({'error': 'Exam record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ExamResultAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                exam_result = ExamResult.objects.get(pk=pk)
+                serializer = ExamResultSerializer(exam_result)
+                return Response(serializer.data)
+            except ExamResult.DoesNotExist:
+                return Response({'error': 'ExamResult record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            exam_results = ExamResult.objects.all()
+            serializer = ExamResultSerializer(exam_results, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ExamResultSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            exam_result = ExamResult.objects.get(pk=pk)
+            serializer = ExamResultSerializer(exam_result, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except ExamResult.DoesNotExist:
+            return Response({'error': 'ExamResult record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            exam_result = ExamResult.objects.get(pk=pk)
+            exam_result.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ExamResult.DoesNotExist:
+            return Response({'error': 'ExamResult record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class CourseAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                course = Course.objects.get(pk=pk)
+                serializer = CourseSerializer(course)
+                return Response(serializer.data)
+            except Course.DoesNotExist:
+                return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            courses = Course.objects.all()
+            serializer = CourseSerializer(courses, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            course = Course.objects.get(pk=pk)
+            serializer = CourseSerializer(course, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Course.DoesNotExist:
+            return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            course = Course.objects.get(pk=pk)
+            course.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Course.DoesNotExist:
+            return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ScoreAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                score = Score.objects.get(pk=pk)
+                serializer = ScoreSerializer(score)
+                return Response(serializer.data)
+            except Score.DoesNotExist:
+                return Response({'error': 'Score record not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            scores = Score.objects.all()
+            serializer = ScoreSerializer(scores, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ScoreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            score = Score.objects.get(pk=pk)
+            serializer = ScoreSerializer(score, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Score.DoesNotExist:
+            return Response({'error': 'Score record not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            score = Score.objects.get(pk=pk)
+            score.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Score.DoesNotExist:
+            return Response({'error': 'Score record not found'}, status=status.HTTP_404_NOT_FOUND)
+class ClassroomAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk is not None:
+            try:
+                classroom = Classroom.objects.get(pk=pk)
+                serializer = ClassroomSerializer(classroom)
+                return Response(serializer.data)
+            except Classroom.DoesNotExist:
+                return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            classrooms = Classroom.objects.all()
+            serializer = ClassroomSerializer(classrooms, many=True)
+            return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ClassroomSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            classroom = Classroom.objects.get(pk=pk)
+            serializer = ClassroomSerializer(classroom, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            classroom = Classroom.objects.get(pk=pk)
+            classroom.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=status.HTTP_404_NOT_FOUND)

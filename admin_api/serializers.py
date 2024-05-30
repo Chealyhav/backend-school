@@ -19,3 +19,41 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+class ParentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parent
+        fields = '__all__'
+class ClassroomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classroom
+        fields = '__all__'
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = '__all__'
+class ExamTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamType
+        fields = '__all__'
+class ExamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = '__all__'
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'
+class ExamResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamResult
+        fields = '__all__'
+        
+        
+class ScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Score
+        fields = '__all__'
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'

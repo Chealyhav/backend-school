@@ -4,89 +4,7 @@ import os
 from rest_framework.authtoken.models import Token
 
 
-
 # school management system 
-# class Classes(models.Model):
-#     name = models.CharField(max_length=200, null=True)
-#     classCode = models.CharField(max_length=200, null=True)
-#     background = models.ImageField(upload_to='content',blank=True)
-#     des = models.CharField(max_length=500, null=True)
-#     price = models.CharField(max_length=500, null=True)
-#     duration = models.CharField(max_length=500, null=True)
-#     subtitle = models.CharField(max_length=100, null=True)
-#     sessions = models.CharField(max_length=400, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-    
-#     def __str__(self):
-#         return self.name
-    
-# class Teacher(models.Model):
-#     firstName = models.CharField(max_length=255)
-#     lastName = models.CharField(max_length=255)
-#     gender = models.CharField(max_length=100, null=True)
-#     dob = models.CharField(max_length=100, null=True)
-#     subject = models.CharField(max_length=100, null=True)
-#     email = models.CharField(max_length=255, null=True)
-#     registrationDate = models.CharField(max_length=255, null=True)
-#     phone = models.CharField(max_length=255, null=True)
-#     experience = models.CharField(max_length=500, null=True)
-#     profile = models.ImageField(upload_to='content', blank=True, null=True)
-#     classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-    
-#     def __str__(self):
-#         return f"{self.firstName} {self.lastName}"
-
-# class Group(models.Model):
-#     name = models.CharField(max_length=100)
-#     subtitle = models.CharField(max_length=100, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-    
-#     def __str__(self):
-#         return self.name
-
-
-# class Student(models.Model):
-#     firstName = models.CharField(max_length=255)
-#     lastName = models.CharField(max_length=255)
-#     age = models.IntegerField(null=True)
-#     gender = models.CharField(max_length=100, null=True)
-#     dob = models.CharField(max_length=100, null=True)
-#     subject = models.CharField(max_length=100, null=True)
-#     email = models.CharField(max_length=255, null=True)
-#     registrationDate = models.DateField(max_length=100, null=True)
-#     phone = models.CharField(max_length=255, null=True)
-#     studentID = models.CharField(max_length=255)
-#     profile = models.ImageField(upload_to='content', blank=True, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-#     group = models.ForeignKey(Group, related_name='student_score', on_delete=models.CASCADE)
-#     classes = models.ManyToManyField(Classes)
-    
-#     def __str__(self):
-#         return f"{self.firstName} {self.lastName}"
-
-# class Course(models.Model): 
-#     title = models.CharField(max_length=120)
-#     des = models.CharField(max_length=500, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-#     def __str__(self) -> str:
-#         return str(self.title)
-
-# class Score(models.Model): 
-#     title = models.CharField(max_length=120)
-#     student = models.ForeignKey(Student, related_name='student_score', on_delete=models.CASCADE)
-#     course = models.ForeignKey(Course, related_name='course_score', on_delete = models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now_add=True)
-#     def __str__(self) -> str:
-#         return self.title
- 
-
 class Parent(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -140,7 +58,7 @@ class Student(models.Model):
     email = models.CharField(max_length=255, null=True)
     registrationDate = models.DateField(null=True)
     phone = models.CharField(max_length=255, null=True)
-    studentID = models.CharField(max_length=255)
+    studentID = models.CharField(max_length=255, unique=True, blank=True)
     profile = models.ImageField(upload_to='content', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -151,11 +69,21 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.firstName} {self.lastName}"
+    def save(self, *args, **kwargs):
+        if not self.studentID:
+            last_student = Student.objects.all().order_by('id').last()
+            if last_student and last_student.studentID.isdigit():
+                last_id = int(last_student.studentID)
+                new_id = last_id + 1
+            else:
+                new_id = 1
+            self.studentID = str(new_id).zfill(3)  # Pad the number with zeros to make it 3 digits
+        super(Student, self).save(*args, **kwargs)
 
 class Attendance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('Absent', 'Absent')])
+    status = models.CharField(max_length=10, default="AP")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
@@ -179,7 +107,7 @@ class Exam(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=200)
-    major_code = models.CharField(max_length=20)
+    subject_code = models.CharField(max_length=20)
     des = models.CharField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

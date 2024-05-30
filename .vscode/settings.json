@@ -6,6 +6,7 @@
         "collectionuser",
         "collectionusers",
         "corsheaders",
+        "examtype",
         "schooldb",
         "schoolmanagement",
         "schoolmodel",
