@@ -6,12 +6,7 @@ class ClaasesSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Classes 
         fields = '__all__' 
-        
-class BannerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Banner
-        fields = '__all__'
-        
+               
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher

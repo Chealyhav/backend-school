@@ -139,3 +139,26 @@ class Contact(models.Model):
     def __str__(self):
         return self.background
 
+class Banner(models.Model):
+    # title = models.CharField(max_length=100, null=True)
+    image = models.ImageField(upload_to='content')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Classes(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    classCode = models.CharField(max_length=200, null=True)
+    background = models.ImageField(upload_to='content', blank=True)
+    des = models.CharField(max_length=500, null=True)
+    price = models.CharField(max_length=500, null=True)
+    duration = models.CharField(max_length=500, null=True)
+    subtitle = models.CharField(max_length=100, null=True)
+    sessions = models.CharField(max_length=400, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

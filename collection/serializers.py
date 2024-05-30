@@ -1,15 +1,11 @@
 from .models import * 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-
-
 from .models import User
 from django.contrib.auth import authenticate
 
 
-
 #creating serializers.
-
 
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
@@ -84,3 +80,7 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Contact 
         fields = '__all__'          
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = '__all__'
