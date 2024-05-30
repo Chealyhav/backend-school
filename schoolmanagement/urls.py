@@ -14,5 +14,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     path('collection/', include('collection.urls', namespace='collection')),
-    path('admin_api/', include('admin_api.urls', namespace='admin_api')),
+    path('collection/', include('admin_api.urls', namespace='admin_api')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

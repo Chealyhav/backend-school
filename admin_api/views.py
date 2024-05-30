@@ -7,8 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import os
-
-
+from .serializers import ClaasesSerializer
+from .serializers import TeacherSerializer
+from .serializers import GroupSerializer
+from .serializers import StudentSerializer
 class ClassesAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
