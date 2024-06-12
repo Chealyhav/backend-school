@@ -63,9 +63,10 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
+    classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True) # add new column
     classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True)
     group = models.ForeignKey(Group, related_name='students', on_delete=models.CASCADE)
-    classes = models.ManyToManyField(Classes)
+
 
     def __str__(self):
         return f"{self.firstName} {self.lastName}"
@@ -155,6 +156,15 @@ class Score(models.Model):
     title = models.CharField(max_length=120)
     student = models.ForeignKey(Student, related_name='scores', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, related_name='scores', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+class Session(models.Model):
+    title = models.CharField(max_length=120)
+    subject = models.ForeignKey(Subject, related_name='scores', on_delete=models.CASCADE)
+    classes = models.ForeignKey(Classes, related_name='scores', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
