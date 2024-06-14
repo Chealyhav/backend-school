@@ -11,6 +11,12 @@ CORS_ORIGIN_ALLOW_ALL = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Base directory path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECRET_KEY = 'pp#hk$6^0-1r1z*l-+_5$4&84#l482(fjf8#vn99x!1fax@0ik'
@@ -151,9 +157,12 @@ STATIC_URL = '/static/'
 
 # because in this we need to store media files
 
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# STATICFILES_DIRS=(
+#     os.path.join(BASE_DIR,'media'),
+# )
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATICFILES_DIRS=(
-    os.path.join(BASE_DIR,'media'),
-)
