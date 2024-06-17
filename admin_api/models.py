@@ -38,7 +38,7 @@ class Student(models.Model):
     dob = models.DateField(null=True)
     subject = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=255, null=True)
-    registrationDate = models.DateField(null=True)
+    # registrationDate = models.DateField(null=True,auto_now_add=True)
     phone = models.CharField(max_length=255, null=True)
     studentID = models.CharField(max_length=255, unique=True, blank=True)
     profile = models.ImageField(upload_to='content', blank=True, null=True)
