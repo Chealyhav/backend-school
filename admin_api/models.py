@@ -15,24 +15,6 @@ class Parent(models.Model):
     def __str__(self):
         return self.name
 
-class Classroom(models.Model):
-    name = models.CharField(max_length=100)
-    capacity = models.IntegerField()
-    des = models.CharField(max_length=500, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return self.name
-
-class Group(models.Model):
-    name = models.CharField(max_length=100)
-    subtitle = models.CharField(max_length=100, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
 class Classes(models.Model):
     name = models.CharField(max_length=200, null=True)
     classCode = models.CharField(max_length=200, null=True)
@@ -63,11 +45,7 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
-    classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True) # add new column
-    classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True)
-    group = models.ForeignKey(Group, related_name='students', on_delete=models.CASCADE)
-
-
+    classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True) 
     def __str__(self):
         return f"{self.firstName} {self.lastName}"
     def save(self, *args, **kwargs):
@@ -78,7 +56,7 @@ class Student(models.Model):
                 new_id = last_id + 1
             else:
                 new_id = 1
-            self.studentID = str(new_id).zfill(3)  # Pad the number with zeros to make it 3 digits
+            self.studentID = str(new_id).zfill(3) 
         super(Student, self).save(*args, **kwargs)
 
 class Attendance(models.Model):
@@ -143,19 +121,9 @@ class Teacher(models.Model):
     def __str__(self):
         return f"{self.firstName} {self.lastName}"
 
-class Course(models.Model):
-    title = models.CharField(max_length=120)
-    des = models.CharField(max_length=500, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
-
 class Score(models.Model):
     title = models.CharField(max_length=120)
     student = models.ForeignKey(Student, related_name='scores', on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, related_name='scores', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

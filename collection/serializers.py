@@ -6,11 +6,15 @@ from django.contrib.auth import authenticate
 
 
 #creating serializers.
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'    
 
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=["email","first_name", "last_name","password" ,"username", "role"]
+        fields=["id", "email","first_name", "last_name","password" ,"username", "role"]
 
     def create(self, validated_data):
         user = User(
@@ -23,8 +27,6 @@ class UserSerializers(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-
-
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=128, write_only=True)
@@ -54,7 +56,7 @@ class UserLoginSerializer(serializers.Serializer):
             return validation
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid login credentials")
-    
+       
 class BannerHomerSerializer(serializers.ModelSerializer): 
     class Meta: 
         model = BannerHome 

@@ -7,11 +7,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import os
-# from .serializers import ClaasesSerializer
-# from .serializers import TeacherSerializer
-# from .serializers import GroupSerializer
-# from .serializers import StudentSerializer
-# from .serializers import ParentSerializer
 
 class ClassesAPIView(APIView):
     def get(self, request, pk=None):
@@ -96,45 +91,6 @@ class TeacherViewSet(APIView):
         except Teacher.DoesNotExist:
             return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class GroupAPIView(APIView):
-    def get(self, request, pk=None):
-        if pk is not None:
-            try:
-                group = Group.objects.get(pk=pk)
-                serializer = GroupSerializer(group)
-                return Response(serializer.data)
-            except Group.DoesNotExist:
-                return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            groups = Group.objects.all()
-            serializer = GroupSerializer(groups, many=True)
-            return Response(serializer.data)
-
-    def post(self, request):
-        serializer = GroupSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def patch(self, request, pk):
-        try:
-            group = Group.objects.get(pk=pk)
-            serializer = GroupSerializer(group, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Group.DoesNotExist:
-            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    def delete(self, request, pk):
-        try:
-            group = Group.objects.get(pk=pk)
-            group.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Group.DoesNotExist:
-            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
 class StudentAPIView(APIView):
     def get(self, request, pk=None):
         if pk is not None:
@@ -418,46 +374,6 @@ class ExamResultAPIView(APIView):
         except ExamResult.DoesNotExist:
             return Response({'error': 'ExamResult record not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class CourseAPIView(APIView):
-    def get(self, request, pk=None):
-        if pk is not None:
-            try:
-                course = Course.objects.get(pk=pk)
-                serializer = CourseSerializer(course)
-                return Response(serializer.data)
-            except Course.DoesNotExist:
-                return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            courses = Course.objects.all()
-            serializer = CourseSerializer(courses, many=True)
-            return Response(serializer.data)
-
-    def post(self, request):
-        serializer = CourseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, pk):
-        try:
-            course = Course.objects.get(pk=pk)
-            serializer = CourseSerializer(course, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Course.DoesNotExist:
-            return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    def delete(self, request, pk):
-        try:
-            course = Course.objects.get(pk=pk)
-            course.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Course.DoesNotExist:
-            return Response({'error': 'Course record not found'}, status=status.HTTP_404_NOT_FOUND)
-
 class ScoreAPIView(APIView):
     def get(self, request, pk=None):
         if pk is not None:
@@ -497,7 +413,7 @@ class ScoreAPIView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Score.DoesNotExist:
             return Response({'error': 'Score record not found'}, status=status.HTTP_404_NOT_FOUND)
-class ClassroomAPIView(APIView):
+
     def get(self, request, pk=None):
         if pk is not None:
             try:

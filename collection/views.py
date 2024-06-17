@@ -1,61 +1,46 @@
 
-import statistics
-from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import View
-from django.views import generic
-from django.core.paginator import Paginator
-from django.http import HttpResponse, JsonResponse
+
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import BannerHomerSerializer
-from .models import BannerHome
-from .serializers import AboutSerializer
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializers, UserLoginSerializer
 from .models import User
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializers
-
-
+    
+class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 class AuthUserLoginView(APIView):
     serializer_class = UserLoginSerializer
     permission_classes = (AllowAny, )
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        valid = serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)
 
-        if valid:
-            status_code = status.HTTP_200_OK
+        user = User.objects.get(email=serializer.validated_data['email'])
+        refresh = RefreshToken.for_user(user)
 
-            response = {
-                'success': True,
-                'statusCode': status_code,
-                'message': 'User logged in successfully',
-                'email': serializer.data['email'],
-                'role': serializer.data['role'],
-                'email': serializer.data['email'],
-                'username':serializer.data['username'],
-                'first_name':serializer.data['first_name'],
-                'last_name':serializer.data['last_name'],
-            }
-
-            return Response(response, status=status_code)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'email': serializer.validated_data['email'],
+            'role': serializer.validated_data['role'],
+            'username': serializer.validated_data['username'],
+            'first_name': serializer.validated_data['first_name'],
+            'last_name': serializer.validated_data['last_name'],
+        }, status=status.HTTP_200_OK)
 
 
 
@@ -105,8 +90,6 @@ class BannerHomeAPIView(APIView):
         except BannerHome.DoesNotExist:
             return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
 
-
- 
 class AboutAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
@@ -191,8 +174,6 @@ class BannerViewSet(APIView):
                 return Response({'error': 'Image file not found'}, status=status.HTTP_404_NOT_FOUND)
         except Banner.DoesNotExist:
             return Response({'error': 'Image not found'}, status=status.HTTP_404_NOT_FOUND)
-
-      
 
 class BlogAPIView(APIView):
     def get(self, request, pk=None):
